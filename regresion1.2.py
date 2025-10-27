@@ -158,37 +158,3 @@ plt.ylabel('Predicted Close Price')
 plt.legend()
 plt.grid(True)
 plt.show()
-
-# --- (Your previous code, including MAPE function, goes above this) ---
-
-print("\n--- Model Validation on Test Data ---")
-
-try:
-    # 1. Load the test data
-    df_test = pd.read_csv("test.csv")
-
-    # 2. Preprocess the test data
-    # IMPORTANT: Fill NaNs using the means from the TRAINING data
-    df_test = df_test.fillna(column_means) 
-
-    # 3. Extract X_test and y_test
-    X_test = df_test.drop(columns=["close","date","symbols"]).values
-    y_test = df_test["close"].values
-
-    # 4. Normalize the test data
-    # CRITICAL: Normalize using mu and sigma from the TRAINING data
-    X_test_norm = (X_test - mu) / sigma
-
-    # 5. Evaluate the model on the test data
-    test_cost = compute_cost(X_test_norm, y_test, w_final, b_final)
-
-    print(f"Test Data Cost (MSE): {test_cost:.2f}")
-    print(f"Test Data Mean Absolute Percentage Error (MAPE): {test_mape:.2f}%")
-    print(f"This means the model is, on average, {test_mape:.2f}% off on new, unseen data.")
-
-except FileNotFoundError:
-    print("\n---")
-    print("WARNING: 'test.csv' not found. Skipping validation on test data.")
-except Exception as e:
-    print(f"\nAn error occurred during test data processing: {e}")
-    print("Please ensure 'test.csv' has the same format as 'train.csv'")
